@@ -1,7 +1,7 @@
 """Реализация алгоритма RSA. Используется для шифрования ключа для симметричного шифрования AES"""
 
-from hand_math import gcd, gen_prime
-import random
+from cypher_share.hand_math import gcd, gen_prime
+import secrets
 
 def inverse(a: int, m: int) -> int:
     if m <= 0:
@@ -26,22 +26,28 @@ def inverse(a: int, m: int) -> int:
 
 def generate_keypair() -> tuple:
     """Генерирует пару из публичного и приватного ключей для алгоритма RSA"""
-    p = gen_prime()
-    q = gen_prime()
+    while True:
+        p = gen_prime()
+        q = gen_prime()
 
-    n = p * q
-    phi = (p - 1) * (q - 1)
-
-    e = random.randrange(2, phi)
-    while gcd(e, phi) != 1:
-        e = random.randrange(2, phi)
-
-    try:
-        d = inverse(e, phi)
-    except ValueError:
-        return generate_keypair()
-
-    return ((e, n), (d, n))
+        if p == q:
+            continue
+    
+        n = p * q
+        phi = (p - 1) * (q - 1)
+    
+        # e = 65537
+        while True:
+            e = secrets.randbelow(phi - 4) + 3
+            if gcd(e, phi) == 1:
+                break
+    
+        try:
+            d = inverse(e, phi)
+        except ValueError:
+            continue
+    
+        return ((e, n), (d, n))
 
 def encrypt_rsa(public_key: tuple, text: str) -> list:
     """Шифрует текст с помощью публичного RSA-ключа
