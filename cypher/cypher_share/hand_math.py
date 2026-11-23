@@ -2,9 +2,12 @@ import random
 from typing import List
 
 
+
 def gcd(a: int, b: int) -> int:
-    """Рекурсивное нахождение наибольшего общего делителя"""
-    return a if b == 0 else gcd(b, a % b)
+    a, b = abs(a), abs(b)
+    while b:
+        a, b = b, a % b
+    return a
 
 
 def is_prime(n: int, k: int = 5) -> bool:

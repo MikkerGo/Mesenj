@@ -1,7 +1,7 @@
 from typing import Optional, List
 
-from cypher_share.tables import *
-from cypher_share.hand_math import pad_to_multiple, right_shift, left_shift, galois_multiply
+from cypher.cypher_share.tables import *
+from cypher.cypher_share.hand_math import pad_to_multiple, right_shift, left_shift, galois_multiply
 
 ROWS = 4
 BLOCKS_SIZE = 16
